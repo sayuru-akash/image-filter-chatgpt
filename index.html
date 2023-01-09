@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Image Filter</title>
+    <style>
+      /* Add some styling to the webpage */
+      body {
+        font-family: sans-serif;
+        background-color: #f1f1f1;
+        text-align: center;
+        padding: 20px;
+      }
+
+      .h1 {
+        font-family: "Courier New", Courier, monospace;
+        font-size: 40px;
+        color: #333;
+        width: 100%;
+        text-align: center;
+      }
+
+      #image-container {
+        display: inline-block;
+        position: relative;
+        margin: 20px;
+      }
+
+      #image-container img {
+        max-width: 100%;
+      }
+
+      #filter-select {
+        margin: 10px;
+        padding: 20px;
+        border: none;
+        border-radius: 4px;
+        background-color: #333;
+        color: #fff;
+        font-size: 16px;
+        cursor: pointer;
+      }
+
+      #download-button {
+        margin: 10px;
+        padding: 20px;
+        border: none;
+        border-radius: 4px;
+        background-color: #333;
+        color: #fff;
+        font-size: 16px;
+        cursor: pointer;
+      }
+
+      .grayscale {
+        filter: grayscale(100%);
+      }
+
+      .sepia {
+        filter: sepia(100%);
+      }
+
+      .invert {
+        filter: invert(100%);
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Image Filter Generated with ChatGPT</h1>
+
+    <!-- Add an input field to select and upload an image -->
+    <input type="file" id="image-upload" accept="image/*" />
+
+    <!-- Add a container to display the selected image -->
+    <div id="image-container">
+      <img id="image" />
+    </div>
+
+    <!-- Add a dropdown to select a filter -->
+    <select id="filter-select">
+      <option value="none">None</option>
+      <option value="grayscale">Grayscale</option>
+      <option value="sepia">Sepia</option>
+      <option value="invert">Invert</option>
+    </select>
+
+    <!-- Add a button to apply the selected filter to the image -->
+    <button id="apply-button">Apply</button>
+
+    <!-- Add a button to download the modified image -->
+    <a id="download-link" href="#">
+      <button id="download-button">Download</button>
+    </a>
+
+    <script>
+      // Get the input field, image container, and buttons
+      const imageUpload = document.getElementById("image-upload");
+      const imageContainer = document.getElementById("image-container");
+      const image = imageContainer.querySelector("img");
+      const applyButton = document.getElementById("apply-button");
+      const downloadLink = document.getElementById("download-link");
+      const downloadButton = downloadLink.querySelector("button");
+
+      // Add an event listener to the input field to update the image when a new file is selected
+      imageUpload.addEventListener("change", () => {
+        // Get the selected file
+        const file = imageUpload.files[0];
+
+        // Create a new FileReader to read the file as a data URL
+        const reader = new FileReader();
+
+        // Set the src of the image to the data URL once it has been read
+        reader.addEventListener("load", () => {
+          image.src = reader.result;
+        });
+
+        // Read the file as a data URL
+        reader.readAsDataURL(file);
+      });
+
+      // Add an event listener to the apply button to apply the selected filter to the image
+      applyButton.addEventListener("click", () => {
+        // Get the selected filter
+        const filter = document.getElementById("filter-select").value;
+
+        // Remove all filter classes from the image
+        image.classList.remove("grayscale", "sepia", "invert");
+
+        // Check the selected filter and set the appropriate class on the image
+        if (filter === "grayscale") {
+          image.classList.add("grayscale");
+        } else if (filter === "sepia") {
+          image.classList.add("sepia");
+        } else if (filter === "invert") {
+          image.classList.add("invert");
+        }
+      });
+
+      // Add an event listener to the download button to download the modified image
+      downloadButton.addEventListener("click", () => {
+        // Create a new canvas element
+        const canvas = document.createElement("canvas");
+        const context = canvas.getContext("2d");
+
+        // Set the width and height of the canvas to the same as the image
+        canvas.width = image.naturalWidth;
+        canvas.height = image.naturalHeight;
+
+        // Apply the selected filter to the canvas context
+        const filter = document.getElementById("filter-select").value;
+        if (filter === "grayscale") {
+          context.filter = "grayscale(100%)";
+        } else if (filter === "sepia") {
+          context.filter = "sepia(100%)";
+        } else if (filter === "invert") {
+          context.filter = "invert(100%)";
+        }
+
+        // Draw the image on the canvas
+        context.drawImage(image, 0, 0);
+
+        // Set the href of the download link to the data URL of the canvas
+        downloadLink.href = canvas.toDataURL();
+
+        // Set the download attribute of the download link to the file name
+        downloadLink.download = "modified-image.png";
+      });
+    </script>
+  </body>
+</html>
