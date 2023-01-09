@@ -1,1 +1,3 @@
-# image-filter-chatgpt
+# Image Filter Script using HTML, CSS, and JS
+
+## Generated with ChatGPT by OpenAI
